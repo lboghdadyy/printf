@@ -6,57 +6,75 @@
 /*   By: sbaghdad <sbaghdad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 16:05:55 by sbaghdad          #+#    #+#             */
-/*   Updated: 2024/11/13 22:10:17 by sbaghdad         ###   ########.fr       */
+/*   Updated: 2024/11/16 17:29:40 by sbaghdad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static	int	print_format(char *str)
+static int	is_var(char c)
 {
-	char	after_pers[9];
-	int		i;
+	char	*s;
 
-	*after_pers = "cspdiuxX";
-	i = 0;
-	while (str[i] != '%' && !ft_strchr(after_pers, str[i + 1]) && str[i])
+	s = "csdxXuip%";
+	if (c == 0)
+		return (0);
+	while (*s)
 	{
-		if(str[i] == '%' && str[i + 1] == '%')
-		ft_putchar(str[i]);
-		str++;
+		if (*s == c)
+			return (1);
+		s++;
 	}
-	if(str[i] != '%' && !ft_strchr(after_pers, str [ i+ 1]) && str[i])
-		return (i);
-	return (NULL);
+	return (0);
 }
 
-int	ft_printf(const char *str, ...)
+static	void	print_format(char c, int *count, va_list args)
 {
-	va_list list;
-	char	after_pers[9];
-	int		i;
-
-	*after_pers = "cspdiuxX%%";
-	va_start(list, str);
-	while (*str)
+	if (c == 'd' || c == 'i')
+		ft_putnbr(va_arg(args, int), count);
+	else if (c == 'c')
+		*count += ft_putchar(va_arg(args, int));
+	else if (c == 'x')
+		ft_putnbrbase(va_arg(args, unsigned int), "0123456789abcdef", count);
+	else if (c == 'X')
+		ft_putnbrbase(va_arg(args, unsigned int), "0123456789ABCDEF", count);
+	else if (c == 's')
+		*count += ft_putstr(va_arg(args, char *));
+	else if (c == 'u')
+		ft_putnbrbaseunsigned(va_arg(args, unsigned int), "0123456789", count);
+	else if (c == 'p')
 	{
-		i = print_format(*str);
-		if(str[i] == 'd' || str[i] == 'i')
-			ft_putnbrbase(va_arg(list, long), "0123456789");
-		else if(str[i] == 'c')
-			ft_putchar(va_arg(list, char));
-		else if(str[i] == 'x')
-			ft_putnbrbase(va_arg(list, long), "0123456789abcdef");
-		else if(str[i] == 'X')
-			ft_putnbrbase(va_arg(list, long), "0123456789ABCDEF");
-		else if(str[i] == 'p')
-			ft_putadr(va_arg(list, long));
-		else if(str[i] == 's')
-			ft_putstr(va_arg(list, char *));
-		else if(str[i] == 'u')
-			ft_putnbrbase(va_arg(list, long), "0123456789");
-		str += i;
+		*count += ft_putstr("0x");
+		ft_putadr(va_arg(args, unsigned long), count);
 	}
-	va_end(list);
-	return(i);
+	else
+		*count += ft_putchar(c);
+}
+
+int	ft_printf(const char *format, ...)
+{
+	int		count;
+	int		i;
+	va_list	args;
+
+	va_start(args, format);
+	(1) && (i = 0, count = 0);
+	while (format[i])
+	{
+		if (format[i] == '%' && is_var(format[i + 1]) && format[i + 1])
+		{
+			i++;
+			print_format(format[i], &count, args);
+			i++;
+		}
+		else if (format[i] == '%' && !is_var(format[i + 1]))
+			i++;
+		else
+		{
+			count += ft_putchar(format[i]);
+			i++;
+		}
+	}
+	va_end(args);
+	return (count);
 }

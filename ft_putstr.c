@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbrbase.c                                    :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbaghdad <sbaghdad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 12:10:07 by sbaghdad          #+#    #+#             */
-/*   Updated: 2024/11/16 17:31:46 by sbaghdad         ###   ########.fr       */
+/*   Created: 2024/11/12 16:14:08 by sbaghdad          #+#    #+#             */
+/*   Updated: 2024/11/16 17:32:29 by sbaghdad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	ft_putnbrbase(long long nbr, char *base, int *count)
+int	ft_putstr(char *str)
 {
-	long	len;
+	int	i;
+	int	count;
 
-	len = ft_strlen(base);
-	if (nbr < 0)
+	if (!str)
 	{
-		*count += ft_putchar('-');
-		nbr = -nbr;
+		write(1, "(null)", 6);
+		return (6);
 	}
-	if (nbr >= len)
-		ft_putnbrbase(nbr / len, base, count);
-	*count += ft_putchar(base[nbr % len]);
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		count += ft_putchar(str[i]);
+		i++;
+	}
+	return (count);
 }

@@ -6,7 +6,7 @@
 /*   By: sbaghdad <sbaghdad@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 13:41:07 by sbaghdad          #+#    #+#             */
-/*   Updated: 2024/11/13 13:44:09 by sbaghdad         ###   ########.fr       */
+/*   Updated: 2024/11/15 16:01:20 by sbaghdad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 size_t	ft_strlen(const char *str)
 {
 	size_t	len;
-	
+
 	len = 0;
 	while (str[len])
 		len++;
